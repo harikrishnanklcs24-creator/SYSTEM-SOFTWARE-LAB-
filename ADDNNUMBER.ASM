@@ -64,3 +64,41 @@ mov ah,4ch
 int 21h
 end
 
+
+
+1.  Set memory model to SMALL and reserve stack.
+2.  Define macros:
+      - printn: print a string (uses DX/INT 21h AH=09h)
+      - prints: print a 2-digit number in AL (0..99)
+      - printr: read a single character (INT 21h AH=01h) and convert ASCII → numeric by subtracting '0'
+3.  In DATA segment define messages and storage:
+      - m1: "Limit"
+      - m2: "enter number"
+      - m3: "sum"
+      - arr: buffer to store numbers
+      - val: counter used while storing/adding
+4.  Start CODE and define program entry (main proc).
+5.  Initialize DS using @DATA.
+6.  Print prompt for limit (printn m1).
+7.  Read one character (printr) → numeric limit now in AL.
+8.  Move limit from AL to BL (BL will hold number of inputs to read).
+9.  Initialize SI = 0 (index into arr).
+10. Print prompt for numbers (printn m2).
+11. Enter input loop (label loo):
+      a. Read one character (printr) → numeric digit in AL.
+      b. Store numeric value AL into arr[SI].
+      c. Increment SI.
+      d. Increment val (number read so far).
+      e. Compare val with BL (limit). If not equal, repeat loop.
+12. After inputs done: reset SI = 0, val = 0, CL = 0 (CL will hold sum).
+13. Enter addition loop (label add_loo):
+      a. Load AL ← arr[SI] (numeric value).
+      b. Add AL to CL (accumulate sum in CL).
+      c. Increment SI.
+      d. Increment val.
+      e. Compare val with BL (limit). If not equal, repeat loop.
+14. Print "sum" message (printn m3).
+15. Move sum from CL → AL and call prints to display the sum.
+16. Exit program (INT 21h AH=4Ch).
+17. End program.
+
